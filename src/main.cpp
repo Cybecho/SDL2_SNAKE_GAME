@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    g_window = SDL_CreateWindow("201921408 SBU", 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+    g_window = SDL_CreateWindow("201921408 SBU", 100, 100, WINDOW_SIZE, WINDOW_SIZE, 0);
     g_renderer = SDL_CreateRenderer(g_window, -1, 0);
 
     InitGame();

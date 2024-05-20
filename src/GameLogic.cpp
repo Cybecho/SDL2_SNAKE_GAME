@@ -14,8 +14,8 @@ SDL_Rect g_bg_destination_rect;
 void InitGame() {
     g_flag_running = true;
 
-    g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-    g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+    g_bg_source_rect = { 0, 0, WINDOW_SIZE, WINDOW_SIZE };
+    g_bg_destination_rect = { 0, 0, WINDOW_SIZE, WINDOW_SIZE };
 }
 
 void HandleEvents() {
