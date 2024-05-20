@@ -5,7 +5,7 @@ SDL_Window* g_window;
 SDL_Renderer* g_renderer;
 bool g_flag_running;
 Uint32 g_last_time_ms;
-Uint32 g_frame_per_sec = 30;
+Uint32 g_frame_per_sec = GAME_FRAME;
 
 int main(int argc, char* argv[]) {
 

@@ -31,7 +31,13 @@ void InitGame() {
     g_Player.push_back(player);
 
     //! Item 객체 생성
-    Item* item = new Item( (rand() % WINDOW_SIZE / 10 * 10) , (rand() % WINDOW_SIZE / 10 * 10) , g_renderer);
+    int itemX, itemY;
+    do {
+        itemX = rand() % WINDOW_SIZE / 10 * 10;
+        itemY = rand() % WINDOW_SIZE / 10 * 10;
+    } while (itemX == player->getX() && itemY == player->getY());
+
+    Item* item = new Item(itemX, itemY, g_renderer);
     g_Item.push_back(item);
 }
 
@@ -85,7 +91,21 @@ void Update() {
                 g_Player.push_back(newTail);
 
                 // 새로운 Item 객체 생성
-                Item* newItem = new Item((rand() % WINDOW_SIZE / 10 * 10), (rand() % WINDOW_SIZE / 10 * 10), g_renderer);
+                int newItemX, newItemY;
+                bool isValidPosition;
+                do {
+                    newItemX = rand() % WINDOW_SIZE / 10 * 10;
+                    newItemY = rand() % WINDOW_SIZE / 10 * 10;
+                    isValidPosition = true;
+                    for (auto p : g_Player) {
+                        if (newItemX == p->getX() && newItemY == p->getY()) {
+                            isValidPosition = false;
+                            break;
+                        }
+                    }
+                } while (!isValidPosition);
+
+                Item* newItem = new Item(newItemX, newItemY, g_renderer);
                 g_Item.push_back(newItem);
 
                 break;
