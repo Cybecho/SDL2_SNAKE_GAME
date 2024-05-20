@@ -24,7 +24,7 @@ public:
     int getDir() const { return mDir; }
 
     //! 하위 객체들의 정보를 받아올 가상함수 
-    virtual string getType() const = 0; //~ 이걸로 Player 인지 Item인지 구분
+    virtual int getType() const = 0; //~ 이걸로 Player 인지 Item인지 Body인지 구분
 
 protected:
     //! 위치 관련

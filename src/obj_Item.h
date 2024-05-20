@@ -10,7 +10,7 @@ public:
     void render(SDL_Renderer* renderer) const;
 
     //! 현재 객체 타입 반환
-    string getType() const { return "Item"; }
+    int getType() const { return mType; }
 
 protected:
     static SDL_Texture* mTexture;

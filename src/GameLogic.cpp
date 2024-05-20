@@ -62,7 +62,9 @@ void HandleEvents()
 void Update() {
     // Player와 Item 업데이트
     for (auto player : g_Player) {
-        player->setDir(g_input);
+        if (player->getType() == Head) { // Head 타입의 Player만 입력 방향 설정
+            player->setDir(g_input);
+        }
         player->update();
     }
 
@@ -93,11 +95,10 @@ void Update() {
 
     // 꼬리 Player 객체 움직임 처리
     for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
-        Player* prevPlayer = *(--it);
+        Player* prevPlayer = *(prev(it));
         Player* currentPlayer = *it;
         currentPlayer->setX(prevPlayer->getPrevX());
         currentPlayer->setY(prevPlayer->getPrevY());
-        ++it;
     }
 
     //~ 게임 오버 조건 처리
