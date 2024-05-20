@@ -18,6 +18,8 @@ public:
     void setDir(int dir) { mDir = dir; }
 	int getX() const { return mX; }
     int getY() const { return mY; }
+    int getPrevX() const { return mPrevX; }
+    int getPrevY() const { return mPrevY; }
     int getPos(int x, int y) const { return mPos[x][y]; }
     int getDir() const { return mDir; }
 
@@ -26,8 +28,10 @@ public:
 
 protected:
     //! 위치 관련
-    int mX;
-    int mY;
+    int mX;     // 현재 x좌표
+    int mY;     // 현재 y좌표
+    int mPrevX; // 이전 x좌표
+    int mPrevY; // 이전 y좌표
     int mPos[ARR_SIZE][ARR_SIZE]; // 2차원 배열로 좌표를 받아올 수 있게 함
     int mDir; // 방향 (현재 자신의 Head에 위치하는 mDir의 내용을 상속받음)
     

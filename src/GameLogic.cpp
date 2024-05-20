@@ -69,6 +69,61 @@ void Update() {
     for (auto item : g_Item) {
         item->update();
     }
+
+    // Player와 Item 충돌 감지
+    for (auto player : g_Player) {
+        for (auto item : g_Item) {
+            if (player->getX() == item->getX() && player->getY() == item->getY()) {
+                // 충돌한 Item 객체 소멸
+                g_Item.remove(item);
+                delete item;
+
+                // 새로운 꼬리 Player 객체 생성
+                Player* newTail = new Player(player->getPrevX(), player->getPrevY(), BODY, g_renderer);
+                g_Player.push_back(newTail);
+
+                // 새로운 Item 객체 생성
+                Item* newItem = new Item((rand() % WINDOW_SIZE / 10 * 10), (rand() % WINDOW_SIZE / 10 * 10), g_renderer);
+                g_Item.push_back(newItem);
+
+                break;
+            }
+        }
+    }
+
+    // 꼬리 Player 객체 움직임 처리
+    for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
+        Player* prevPlayer = *(--it);
+        Player* currentPlayer = *it;
+        currentPlayer->setX(prevPlayer->getPrevX());
+        currentPlayer->setY(prevPlayer->getPrevY());
+        ++it;
+    }
+
+    //~ 게임 오버 조건 처리
+    Player* head = g_Player.front();
+
+    // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우
+    if (g_Player.size() == ARR_SIZE * ARR_SIZE) {
+        cout << "Game Clear!" << endl;
+        g_flag_running = false;
+    }
+
+    // 조건 2: Player가 다른 Player 객체에 닿았을 경우
+    for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
+        Player* body = *it;
+        if (head->getX() == body->getX() && head->getY() == body->getY()) {
+            cout << "Game Over - Collided with body" << endl;
+            //~g_flag_running = false;
+            break;
+        }
+    }
+
+    // 조건 3: Player가 벽에 닿았을 경우
+    if (head->getX() < 0 || head->getX() >= WINDOW_SIZE || head->getY() < 0 || head->getY() >= WINDOW_SIZE) {
+        cout << "Game Over - Collided with wall" << endl;
+        //~ g_flag_running = false;
+    }
 }
 
 

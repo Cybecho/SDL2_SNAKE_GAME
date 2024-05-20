@@ -6,11 +6,16 @@ Player::Player(int x, int y, int defineType, SDL_Renderer* renderer) : Obj(x, y,
     mType = defineType;
     cout << "Create Player , x : " << mX << " | y : " << mY << "|| Type : " << mType << endl;
 }
+
 Player::~Player() {
     cout << "Delete Player" << endl;
 }
 
 void Player::update() {
+    // 이전 위치 저장
+    mPrevX = mX;
+    mPrevY = mY;
+
     if (mDir == UP) { mY -= PLAYER_SIZE; }
     else if (mDir == DOWN) { mY += PLAYER_SIZE; }
 	else if (mDir == LEFT) { mX -= PLAYER_SIZE; }
