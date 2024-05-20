@@ -1,8 +1,4 @@
 #pragma once               // 헤더가드 대신 pragma once 사용
-#define GAME_FRAME 25							// 초당 프레임
-#define WINDOW_SIZE 1000						// 윈도우 사이즈
-#define PLAYER_SIZE 10							// 캐릭터 사이즈
-#define ARR_SIZE WINDOW_SIZE / PLAYER_SIZE		// 배열 사이즈 (윈도우 사이즈 / 캐릭터 사이즈)
 
 enum Position { UP, DOWN, LEFT, RIGHT }; // 캐릭터의 방향을 나타내는 열거형
 
@@ -49,3 +45,11 @@ extern int g_input; // 사용자의 키를 입력받는 변수
 
 //! using namespace
 using namespace std;
+
+//! const 변수
+const string READY_TEXT = "Ready";
+const string GAME_OVER_TEXT = "Game Over";
+const int GAME_FRAME = 25;							// 초당 프레임
+const int WINDOW_SIZE = 1000;						// 윈도우 사이즈
+const int PLAYER_SIZE = 10;							// 캐릭터 사이즈
+const int ARR_SIZE = WINDOW_SIZE / PLAYER_SIZE;		// 배열 사이즈 (윈도우 사이즈 / 캐릭터 사이즈)

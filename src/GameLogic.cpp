@@ -92,6 +92,7 @@ void Update() {
                 // 새로운 꼬리 Player 객체 생성
                 Player* newTail = new Player(player->getX(), player->getY(), BODY, g_renderer);
                 g_Player.push_back(newTail);
+                cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << endl;
 
                 // 새로운 Item 객체 생성
                 int newItemX, newItemY;
@@ -130,7 +131,7 @@ void Update() {
     // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우
     if (g_Player.size() == ARR_SIZE * ARR_SIZE) {
         cout << "Game Clear!" << endl;
-        g_flag_running = false;
+        //~g_flag_running = false;
     }
 
     // 조건 2: Player가 다른 Player 객체에 닿았을 경우
