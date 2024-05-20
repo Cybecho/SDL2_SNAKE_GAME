@@ -2,7 +2,8 @@
 
 SDL_Texture* Obj::mTexture = nullptr;
 
-Obj::Obj(int x, int y, SDL_Renderer* renderer){
+Obj::Obj(int x, int y, SDL_Renderer* renderer) : mX(x), mY(y) {
+    mRect = { x, y, PLAYER_SIZE, PLAYER_SIZE };
     cout << "Create Obj" << endl;
 }
 
@@ -11,12 +12,14 @@ Obj::~Obj() {
 }
 
 void Obj::update() {
+	mRect.x = mX;
+	mRect.y = mY;
 }
 
+//! 각 드라이브 객체에 생성
+/*
 void Obj::render(SDL_Renderer* renderer) const {
-    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255); // 캐릭터 기본 색상
-    SDL_RenderClear(g_renderer);
-
-
-    SDL_RenderPresent(g_renderer);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &mRect);
 }
+*/
