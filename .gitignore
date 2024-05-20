@@ -1,0 +1,12 @@
+# Ignore files with .sln extension
+*.sln
+*.vsidx
+*.ipch
+*.suo
+*.db
+*.pdb
+# Ignore all
+/HW04_fin/**
+
+# Except the following directories and their contents
+!/doc/**
