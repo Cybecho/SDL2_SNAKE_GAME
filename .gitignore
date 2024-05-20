@@ -6,6 +6,7 @@
 *.db
 *.pdb
 # Ignore all
+/.vs/**
 /HW04_fin/**
 
 # Except the following directories and their contents
