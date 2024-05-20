@@ -1,5 +1,6 @@
 #pragma once               // 헤더가드 대신 pragma once 사용
-
+#define WINDOW_WIDTH 500
+#define WINDOW_HEIGHT 500
 
 //! 기본 헤더
 #include <iostream>
@@ -10,6 +11,8 @@
 #include <cmath>
 #include <ctime>
 #include <atlstr.h>
+
+
 #include <windows.h>
 #include <fstream>
 #include <sstream>
