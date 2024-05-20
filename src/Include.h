@@ -1,5 +1,5 @@
 #pragma once               // 헤더가드 대신 pragma once 사용
-#define GAME_FRAME 30							// 초당 프레임
+#define GAME_FRAME 25							// 초당 프레임
 #define WINDOW_SIZE 1000						// 윈도우 사이즈
 #define PLAYER_SIZE 10							// 캐릭터 사이즈
 #define ARR_SIZE WINDOW_SIZE / PLAYER_SIZE		// 배열 사이즈 (윈도우 사이즈 / 캐릭터 사이즈)

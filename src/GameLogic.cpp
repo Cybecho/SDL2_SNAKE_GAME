@@ -54,12 +54,12 @@ void HandleEvents()
         {
             switch (event.key.keysym.sym)
             {
-            case SDLK_LEFT:  g_input = LEFT;    break;
-            case SDLK_RIGHT: g_input = RIGHT;   break;
-            case SDLK_UP:    g_input = UP;      break;
-            case SDLK_DOWN:  g_input = DOWN;    break;
-            case SDLK_SPACE: g_input = -1;      break;
-            default:         g_input = g_input; break;
+            case SDLK_LEFT: if (g_input != RIGHT)   { g_input = LEFT; } break;
+            case SDLK_RIGHT:if (g_input != LEFT)    { g_input = RIGHT;} break;
+            case SDLK_UP: if (g_input != DOWN)      { g_input = UP; }   break;
+            case SDLK_DOWN: if (g_input != UP)      { g_input = DOWN; } break;
+            case SDLK_SPACE: g_input = -1; break; // Space 키 입력 시 방향 입력 초기화
+            default: break;
             }
         }
     }
@@ -79,10 +79,13 @@ void Update() {
     }
 
     // Player와 Item 충돌 감지
-    for (auto player : g_Player) {
-        for (auto item : g_Item) {
-            if (player->getX() == item->getX() && player->getY() == item->getY()) {
-                // 충돌한 Item 객체 소멸
+    for (auto player : g_Player) {                  //~ 모든 Player 객체들에 대해
+        for (auto item : g_Item) {                  //~ 모든 Player당 Item 객체들에 대해
+            if (player->getType() == Head &&        //~ 현재 Player 객체가 Head 타입이고
+                player->getX() == item->getX() &&   //~ 현재 Player 객체의 X 위치와
+                player->getY() == item->getY())     //~ 현재 Player 객체의 Y 위치가 Item 객체의 위치와 같을 경우
+            {
+                //~ 충돌한 Item 객체 소멸
                 g_Item.remove(item);
                 delete item;
 
