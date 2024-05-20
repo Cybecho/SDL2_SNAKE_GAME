@@ -16,12 +16,12 @@ void Player::update() {
     mPrevX = mX;
     mPrevY = mY;
 
+    Obj::update(); // 부모 클래스의 update() 함수 호출하여 mRect 업데이트
+
     if (mDir == UP) { mY -= PLAYER_SIZE; }
     else if (mDir == DOWN) { mY += PLAYER_SIZE; }
-	else if (mDir == LEFT) { mX -= PLAYER_SIZE; }
-	else if (mDir == RIGHT) { mX += PLAYER_SIZE; }
-    
-    Obj::update(); // 부모 클래스의 update() 함수 호출하여 mRect 업데이트
+    else if (mDir == LEFT) { mX -= PLAYER_SIZE; }
+    else if (mDir == RIGHT) { mX += PLAYER_SIZE; }
 }
 
 //! 각 드라이브 객체에 생성

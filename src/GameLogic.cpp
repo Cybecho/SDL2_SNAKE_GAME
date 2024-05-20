@@ -81,7 +81,7 @@ void Update() {
                 delete item;
 
                 // 새로운 꼬리 Player 객체 생성
-                Player* newTail = new Player(player->getPrevX(), player->getPrevY(), BODY, g_renderer);
+                Player* newTail = new Player(player->getX(), player->getY(), BODY, g_renderer);
                 g_Player.push_back(newTail);
 
                 // 새로운 Item 객체 생성
@@ -94,11 +94,11 @@ void Update() {
     }
 
     // 꼬리 Player 객체 움직임 처리
-    for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
-        Player* prevPlayer = *(prev(it));
-        Player* currentPlayer = *it;
-        currentPlayer->setX(prevPlayer->getPrevX());
-        currentPlayer->setY(prevPlayer->getPrevY());
+    for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {    // Head를 제외한 Player 객체들은
+        Player* prevPlayer = *(prev(it));                               // 이전 Player 객체의 위치로 이동
+        Player* currentPlayer = *it;                                    // 이전 Player 객체의 위치를 저장
+        currentPlayer->setX(prevPlayer->getPrevX());                    // X 재 Player 객체의 위치를 이전 Player 객체의 위치로 설정
+        currentPlayer->setY(prevPlayer->getPrevY());                    // Y 현재 Player 객체의 위치를 이전 Player 객체의 위치로 설정
     }
 
     //~ 게임 오버 조건 처리
