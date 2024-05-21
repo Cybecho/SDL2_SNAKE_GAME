@@ -35,12 +35,14 @@ bool g_game_over = false;       // 게임 오버 여부
 bool g_game_clear = false;      // 게임 클리어 여부 (추가)
 bool g_game_paused = false;     // 게임 일시정지 여부
 int g_input;                    // 플레이어 입력  
+int g_score;                    // 점수
 
 void InitGame() {
     g_flag_running = true;
     srand(time(NULL));
 
     g_input = -1;
+    g_score = 0; // 점수 초기화
 
     //! 배경 색상 설정
     g_bg_source_rect = { 0, 0, WINDOW_SIZE, WINDOW_SIZE };
@@ -154,7 +156,7 @@ void Update() {
                 // 새로운 꼬리 Player 객체 생성
                 Player* newTail = new Player(player->getX(), player->getY(), BODY, g_renderer);
                 g_Player.push_back(newTail);
-                cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << endl;
+                cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
 
                 // 새로운 Item 객체 생성
                 int newItemX, newItemY;
@@ -237,8 +239,9 @@ void Render() {
             RenderGameClearTexture();
         }
     }
-
+    RenderScore();
     SDL_RenderPresent(g_renderer);
+    
 }
 
 void ClearGame() {
@@ -273,4 +276,28 @@ void RenderGameOverTexture() {
 void RenderGameClearTexture() {
     SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_BLEND); // 블렌드 모드로 설정해야 뒷 배경이 보임
     SDL_RenderCopy(g_renderer, g_game_clear_texture, nullptr, &g_game_clear_rect);
+}
+
+void RenderScore() {
+    SDL_Color textColor = { 255, 255, 255, 255 };
+    string scoreText = "Score: " + string(10 - to_string(g_score).length(), '0') + to_string(g_score);
+
+    // 폰트 로드
+    TTF_Font* scoreFont = TTF_OpenFont("../../res/FFFFORWA.TTF", 16);
+    if (scoreFont == nullptr) {
+        cout << "Failed to load font: " << TTF_GetError() << endl;
+        return;
+    }
+
+    SDL_Surface* textSurface = TTF_RenderText_Solid(scoreFont, scoreText.c_str(), textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
+    int textWidth = textSurface->w;
+    int textHeight = textSurface->h;
+    SDL_Rect textRect = { WINDOW_SIZE - textWidth - 10, 10, textWidth, textHeight };
+    SDL_RenderCopy(g_renderer, textTexture, nullptr, &textRect);
+
+    // 사용한 자원 해제
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+    TTF_CloseFont(scoreFont);
 }

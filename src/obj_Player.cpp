@@ -1,13 +1,18 @@
 #include "obj_Player.h"
+#include "GameLogic.h"
 
 SDL_Texture* Player::mTexture = nullptr;
 
 Player::Player(int x, int y, int defineType, SDL_Renderer* renderer) : Obj(x, y, renderer) {
     mType = defineType;
+    if (mType != Head) {
+        g_score += mScore; // Head가 아닌 경우에만 점수 추가
+    }
     cout << "Create Player , x : " << mX << " | y : " << mY << "|| Type : " << mType << endl;
 }
 
 Player::~Player() {
+    g_score -= mScore; // Player 객체 소멸 시 score에서 mScore 차감
     cout << "Delete Player" << endl;
 }
 

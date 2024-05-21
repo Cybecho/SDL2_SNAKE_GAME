@@ -13,5 +13,6 @@ public:
     int getType() const { return mType; }
 
 protected:
+    int mScore = 100;
     static SDL_Texture* mTexture;
 };

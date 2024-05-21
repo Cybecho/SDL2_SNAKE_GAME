@@ -20,6 +20,7 @@ void ClearGame();
 void RenderReadyTexture();
 void RenderGameOverTexture();
 void RenderGameClearTexture();
+void RenderScore();
 
 //! 게임 상태
 extern bool g_flag_running;
@@ -35,7 +36,4 @@ extern SDL_Texture* g_game_over_texture;
 extern SDL_Rect g_game_over_rect;
 extern SDL_Texture* g_game_clear_texture;
 extern SDL_Rect g_game_clear_rect;
-
-//! static 변수
-static int LEFT_SPACE = ARR_SIZE * ARR_SIZE; // 남은 공간은 1씩 줄어들고, 0이 되면 게임 클리어
-// LEFT_SPACE - Player_SIZE == 0 이 되면 게임클리어
+extern int g_score; // extern 변수 선언
