@@ -18,16 +18,11 @@ void ClearGame();
 
 //! 게임 로직 관련 함수
 void CreatePlayer();
+void CreateItem();
 void ResetGame();
 void CreateNewTail(Player* player);
 void CreateNewItem();
 void CheckGameOver();
-
-void CreateItem();
-void CreateTrapItem();
-void CreateCheatItem();
-bool IsValidItemPosition(int itemX, int itemY);
-void HandleItemCollision(Player* player);
 
 
 //! 게임 점수
