@@ -85,7 +85,7 @@ void HandleEvents() {
             case SDLK_RIGHT: if (g_input != LEFT && !g_game_paused) { g_input = RIGHT; } break;
             case SDLK_UP: if (g_input != DOWN && !g_game_paused) { g_input = UP; } break;
             case SDLK_DOWN: if (g_input != UP && !g_game_paused) { g_input = DOWN; } break;
-            case SDLK_SPACE: g_game_clear = true; g_game_paused = true;  break;
+            case SDLK_SPACE: g_game_clear = true; break;
             case SDLK_p: g_game_paused = !g_game_paused; break;
             default: break;
             }
