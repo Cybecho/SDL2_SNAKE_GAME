@@ -28,6 +28,7 @@ extern Uint32 g_frame_per_sec;
 extern bool g_game_started;
 extern bool g_game_over;
 extern bool g_game_clear;
+extern bool g_game_paused;
 extern SDL_Texture* g_ready_texture;
 extern SDL_Rect g_ready_rect;
 extern SDL_Texture* g_game_over_texture;

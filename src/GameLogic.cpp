@@ -33,6 +33,7 @@ list<Item*> g_Item;
 bool g_game_started = false;    // 게임 시작 여부
 bool g_game_over = false;       // 게임 오버 여부
 bool g_game_clear = false;      // 게임 클리어 여부 (추가)
+bool g_game_paused = false;     // 게임 일시정지 여부
 int g_input;                    // 플레이어 입력  
 
 void InitGame() {
@@ -99,25 +100,28 @@ void HandleEvents() {
         }
         else if (event.type == SDL_KEYDOWN && g_game_started && !g_game_over && !g_game_clear) {
             switch (event.key.keysym.sym) {
-            case SDLK_LEFT: if (g_input != RIGHT) { g_input = LEFT; } break;
-            case SDLK_RIGHT:if (g_input != LEFT) { g_input = RIGHT; } break;
-            case SDLK_UP: if (g_input != DOWN) { g_input = UP; } break;
-            case SDLK_DOWN: if (g_input != UP) { g_input = DOWN; } break;
+            case SDLK_LEFT: if (g_input != RIGHT && !g_game_paused) { g_input = LEFT; } break;
+            case SDLK_RIGHT: if (g_input != LEFT && !g_game_paused) { g_input = RIGHT; } break;
+            case SDLK_UP: if (g_input != DOWN && !g_game_paused) { g_input = UP; } break;
+            case SDLK_DOWN: if (g_input != UP && !g_game_paused) { g_input = DOWN; } break;
             case SDLK_SPACE: g_game_clear = true; break;
-            default: break; }
+            case SDLK_p: g_game_paused = !g_game_paused; break;
+            default: break;
+            }
         }
     }
 }
 
 void Update() {
-    // Player와 Item 업데이트
-    for (auto player : g_Player) {
-        if (player->getType() == Head) { // Head 타입의 Player만 입력 방향 설정
-            player->setDir(g_input);
+    if (!g_game_paused) {
+        // Player와 Item 업데이트
+        for (auto player : g_Player) {
+            if (player->getType() == Head) { // Head 타입의 Player만 입력 방향 설정
+                player->setDir(g_input);
+            }
+            player->update();
         }
-        player->update();
     }
-
     for (auto item : g_Item) {
         item->update();
     }
