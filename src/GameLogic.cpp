@@ -1,20 +1,34 @@
 // GameLogic.cpp
 #include "GameLogic.h"
 
+//! SDL 사운드 관련 변수
 Mix_Chunk* wave1_;
-Mix_Music* music1_;
 
+//! SDL 텍스트 관련 함수
 SDL_Texture* text_score_;
 SDL_Rect text_score_rect_;
 TTF_Font* game_font_;
 
+//! 배경 이미지 (rect로 solid색상을 구현)
 SDL_Rect g_bg_source_rect;
 SDL_Rect g_bg_destination_rect;
 
+//! Game Readt Text
+SDL_Texture* g_ready_text_texture = nullptr;
+SDL_Rect g_ready_text_rect;
+
+//! Game Over Text
+SDL_Texture* g_game_over_text_texture = nullptr;
+SDL_Rect g_game_over_text_rect;
+
+//! 게임 객체 연결리스트
 list<Player*> g_Player;
 list<Item*> g_Item;
 
-int g_input;
+//! extern 변수 초기화
+bool g_game_started = false;    // 게임 시작 여부
+bool g_game_over = false;	    // 게임 오버 여부
+int g_input;					// 플레이어 입력  
 
 void InitGame() {
     g_flag_running = true;
@@ -25,6 +39,21 @@ void InitGame() {
     //! 배경 색상 설정
     g_bg_source_rect = { 0, 0, WINDOW_SIZE, WINDOW_SIZE };
     g_bg_destination_rect = { 0, 0, WINDOW_SIZE, WINDOW_SIZE };
+
+    g_game_started = true;
+    g_game_over = false;
+
+    //! Game Ready Text
+    SDL_Surface* ready_text_surface = TTF_RenderText_Solid(game_font_, READY_TEXT.c_str(), { 255, 255, 255, 255 });
+    g_ready_text_texture = SDL_CreateTextureFromSurface(g_renderer, ready_text_surface);
+    SDL_FreeSurface(ready_text_surface);
+    g_ready_text_rect = { WINDOW_SIZE / 2 - 50, WINDOW_SIZE / 2 - 50, 100, 100 };
+
+    //! Game Over Text
+    SDL_Surface* game_over_text_surface = TTF_RenderText_Solid(game_font_, GAME_OVER_TEXT.c_str(), { 255, 0, 0, 255 });
+    g_game_over_text_texture = SDL_CreateTextureFromSurface(g_renderer, game_over_text_surface);
+    SDL_FreeSurface(game_over_text_surface);
+    g_game_over_text_rect = { WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100 };
 
     //! Player 객체 생성
     Player* player = new Player( (WINDOW_SIZE/2 + PLAYER_SIZE) , (WINDOW_SIZE / 2+PLAYER_SIZE) , Head , g_renderer);
@@ -41,26 +70,29 @@ void InitGame() {
     g_Item.push_back(item);
 }
 
-void HandleEvents()
-{
+void HandleEvents() {
     SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        if (event.type == SDL_QUIT)
-        {
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
             g_flag_running = false;
         }
-        else if (event.type == SDL_KEYDOWN)
-        {
-            switch (event.key.keysym.sym)
-            {
-            case SDLK_LEFT: if (g_input != RIGHT)   { g_input = LEFT; } break;
-            case SDLK_RIGHT:if (g_input != LEFT)    { g_input = RIGHT;} break;
-            case SDLK_UP: if (g_input != DOWN)      { g_input = UP; }   break;
-            case SDLK_DOWN: if (g_input != UP)      { g_input = DOWN; } break;
-            case SDLK_SPACE: g_input = -1; break; // Space 키 입력 시 방향 입력 초기화
-            default: break;
-            }
+        else if (event.type == SDL_KEYDOWN && !g_game_started && !g_game_over) {
+            g_game_started = true;
+        }
+        else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && g_game_over) {
+            g_game_over = false;
+            g_game_started = false;
+            ClearGame();
+            InitGame();
+        }
+        else if (event.type == SDL_KEYDOWN && g_game_started && !g_game_over) {
+            switch (event.key.keysym.sym) {
+            case SDLK_LEFT: if (g_input != RIGHT) { g_input = LEFT; } break;
+            case SDLK_RIGHT:if (g_input != LEFT) { g_input = RIGHT; } break;
+            case SDLK_UP: if (g_input != DOWN) { g_input = UP; } break;
+            case SDLK_DOWN: if (g_input != UP) { g_input = DOWN; } break;
+            case SDLK_SPACE: g_input = -1; break;
+            default: break; }
         }
     }
 }
@@ -131,15 +163,14 @@ void Update() {
     // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우
     if (g_Player.size() == ARR_SIZE * ARR_SIZE) {
         cout << "Game Clear!" << endl;
-        //~g_flag_running = false;
+        g_game_over = true;
     }
-
     // 조건 2: Player가 다른 Player 객체에 닿았을 경우
     for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
         Player* body = *it;
         if (head->getX() == body->getX() && head->getY() == body->getY()) {
             cout << "Game Over - Collided with body" << endl;
-            //~g_flag_running = false;
+            g_game_over = true;
             break;
         }
     }
@@ -147,22 +178,30 @@ void Update() {
     // 조건 3: Player가 벽에 닿았을 경우
     if (head->getX() < 0 || head->getX() >= WINDOW_SIZE || head->getY() < 0 || head->getY() >= WINDOW_SIZE) {
         cout << "Game Over - Collided with wall" << endl;
-        //~ g_flag_running = false;
+        g_game_over = true;
     }
 }
 
 
 void Render() {
-    SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0); // 배경색 설정
+    SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
     SDL_RenderClear(g_renderer);
 
-    // Player와 Item 렌더링
-    for (auto player : g_Player) {
-        player->render(g_renderer);
+    if (!g_game_started && !g_game_over) {
+        RenderReadyText();
     }
+    else if (g_game_over) {
+        RenderGameOverText();
+    }
+    
+    if (g_game_started && !g_game_over) {
+        for (auto player : g_Player) {
+            player->render(g_renderer);
+        }
 
-    for (auto item : g_Item) {
-        item->render(g_renderer);
+        for (auto item : g_Item) {
+            item->render(g_renderer);
+        }
     }
 
     SDL_RenderPresent(g_renderer);
@@ -180,8 +219,16 @@ void ClearGame() {
     }
     g_Item.clear();
 
-    Mix_FreeMusic(music1_);
     Mix_FreeChunk(wave1_);
-
     TTF_CloseFont(game_font_);
+    SDL_DestroyTexture(g_ready_text_texture);
+    SDL_DestroyTexture(g_game_over_text_texture);
+}
+
+void RenderReadyText() {
+    SDL_RenderCopy(g_renderer, g_ready_text_texture, nullptr, &g_ready_text_rect);
+}
+
+void RenderGameOverText() {
+    SDL_RenderCopy(g_renderer, g_game_over_text_texture, nullptr, &g_game_over_text_rect);
 }
