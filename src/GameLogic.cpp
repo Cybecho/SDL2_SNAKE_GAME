@@ -122,7 +122,7 @@ void Update() {
                 it = g_TrapItem.erase(it);
             }
 
-            for (int i = 0; i < 10; ++i) {
+            for (int i = 0; i < 5; ++i) {
                 CreateTrapItem();
             }
             g_last_trap_item_time = SDL_GetTicks();
@@ -222,22 +222,7 @@ void ClearGame() {
 }
 
 //!************************** 게임 로직 관련 함수 **************************
-
-void CreatePlayer() {
-    Player* player = new Player((WINDOW_SIZE / 2 + PLAYER_SIZE), (WINDOW_SIZE / 2 + PLAYER_SIZE), Head, g_renderer);
-    g_Player.push_back(player);
-}
-
-void CreateItem() {
-    int itemX, itemY;
-    do {
-        itemX = rand() % WINDOW_SIZE / 10 * 10;
-        itemY = rand() % WINDOW_SIZE / 10 * 10;
-    } while (!IsValidItemPosition(itemX, itemY));
-
-    Item* item = new Item(itemX, itemY, g_renderer);
-    g_Item.push_back(item);
-}
+//~ 게임 초기화 및 리셋 관련 함수
 
 void ResetGame() {
     g_game_over = false;
@@ -255,31 +240,6 @@ void ResetGame() {
 
     ClearGame();
     InitGame();
-}
-
-void CreateNewTail(Player* player) {
-    Player* newTail = new Player(player->getPrevX(), player->getPrevY(), BODY, g_renderer);
-    g_Player.push_back(newTail);
-    cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
-}
-
-void CreateNewItem() {
-    int newItemX, newItemY;
-    bool isValidPosition;
-    do {
-        newItemX = rand() % WINDOW_SIZE / 10 * 10;
-        newItemY = rand() % WINDOW_SIZE / 10 * 10;
-        isValidPosition = true;
-        for (auto p : g_Player) {
-            if (newItemX == p->getX() && newItemY == p->getY()) {
-                isValidPosition = false;
-                break;
-            }
-        }
-    } while (!isValidPosition);
-
-    Item* newItem = new Item(newItemX, newItemY, g_renderer);
-    g_Item.push_back(newItem);
 }
 
 void CheckGameOver() {
@@ -309,6 +269,51 @@ void CheckGameOver() {
     }
 }
 
+//~ Player 관련 함수
+
+void CreatePlayer() {
+    Player* player = new Player((WINDOW_SIZE / 2 + PLAYER_SIZE), (WINDOW_SIZE / 2 + PLAYER_SIZE), Head, g_renderer);
+    g_Player.push_back(player);
+}
+
+void CreateNewTail(Player* player) {
+    Player* newTail = new Player(player->getPrevX(), player->getPrevY(), BODY, g_renderer);
+    g_Player.push_back(newTail);
+    cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
+}
+
+//~ Item 관련 함수
+
+void CreateItem() {
+    int itemX, itemY;
+    do {
+        itemX = rand() % WINDOW_SIZE / 10 * 10;
+        itemY = rand() % WINDOW_SIZE / 10 * 10;
+    } while (!IsValidItemPosition(itemX, itemY));
+
+    Item* item = new Item(itemX, itemY, g_renderer);
+    g_Item.push_back(item);
+}
+
+void CreateNewItem() {
+    int newItemX, newItemY;
+    bool isValidPosition;
+    do {
+        newItemX = rand() % WINDOW_SIZE / 10 * 10;
+        newItemY = rand() % WINDOW_SIZE / 10 * 10;
+        isValidPosition = true;
+        for (auto p : g_Player) {
+            if (newItemX == p->getX() && newItemY == p->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+    } while (!isValidPosition);
+
+    Item* newItem = new Item(newItemX, newItemY, g_renderer);
+    g_Item.push_back(newItem);
+}
+
 void CreateTrapItem() {
     int itemX, itemY;
     do {
@@ -330,6 +335,8 @@ void CreateCheatItem() {
     cheat_Item* item = new cheat_Item(itemX, itemY, g_renderer);
     g_CheatItem.push_back(item);
 }
+
+//~ Player와 Item 충돌 관련 함수
 
 bool IsValidItemPosition(int itemX, int itemY) {
     // Player와 겹치는지 확인

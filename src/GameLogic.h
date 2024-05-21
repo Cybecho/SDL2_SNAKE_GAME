@@ -29,6 +29,8 @@ void CreateItem();								// Item 컴파일 타임 중 생성 함수
 void CreateNewItem();							// Item 런타임 중 생성 함수
 void CreateTrapItem();							// trap_Item 생성 함수
 void CreateCheatItem();							// cheat_Item 생성 함수
+
+//! 플레이어와 아이템의 충돌 처리 함수
 bool IsValidItemPosition(int itemX, int itemY);	// 아이템이 생성될 위치가 유효한지 확인
 void HandleItemCollision(Player* player);		// 아이템과 플레이어의 충돌 처리
 
