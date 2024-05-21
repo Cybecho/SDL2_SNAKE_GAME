@@ -13,13 +13,17 @@ TTF_Font* game_font_;
 SDL_Rect g_bg_source_rect;
 SDL_Rect g_bg_destination_rect;
 
-//! Game Readt Text
-SDL_Texture* g_ready_text_texture = nullptr;
-SDL_Rect g_ready_text_rect;
+//! Game Ready Texture
+SDL_Texture* g_ready_texture = nullptr;
+SDL_Rect g_ready_rect;
 
-//! Game Over Text
-SDL_Texture* g_game_over_text_texture = nullptr;
-SDL_Rect g_game_over_text_rect;
+//! Game Over Texture
+SDL_Texture* g_game_over_texture = nullptr;
+SDL_Rect g_game_over_rect;
+
+//! Game Clear Texture
+SDL_Texture* g_game_clear_texture = nullptr;
+SDL_Rect g_game_clear_rect;
 
 //! 게임 객체 연결리스트
 list<Player*> g_Player;
@@ -27,8 +31,9 @@ list<Item*> g_Item;
 
 //! extern 변수 초기화
 bool g_game_started = false;    // 게임 시작 여부
-bool g_game_over = false;	    // 게임 오버 여부
-int g_input;					// 플레이어 입력  
+bool g_game_over = false;       // 게임 오버 여부
+bool g_game_clear = false;      // 게임 클리어 여부 (추가)
+int g_input;                    // 플레이어 입력  
 
 void InitGame() {
     g_flag_running = true;
@@ -40,20 +45,26 @@ void InitGame() {
     g_bg_source_rect = { 0, 0, WINDOW_SIZE, WINDOW_SIZE };
     g_bg_destination_rect = { 0, 0, WINDOW_SIZE, WINDOW_SIZE };
 
-    g_game_started = true;
+    g_game_started = false;
     g_game_over = false;
 
-    //! Game Ready Text
-    SDL_Surface* ready_text_surface = TTF_RenderText_Solid(game_font_, READY_TEXT.c_str(), { 255, 255, 255, 255 });
-    g_ready_text_texture = SDL_CreateTextureFromSurface(g_renderer, ready_text_surface);
-    SDL_FreeSurface(ready_text_surface);
-    g_ready_text_rect = { WINDOW_SIZE / 2 - 50, WINDOW_SIZE / 2 - 50, 100, 100 };
+    //! Game Ready Texture
+    SDL_Surface* ready_surface = IMG_Load("../../res/GameReady.png");
+    g_ready_texture = SDL_CreateTextureFromSurface(g_renderer, ready_surface);
+    SDL_FreeSurface(ready_surface);
+    g_ready_rect = { WINDOW_SIZE / 2 - 50, WINDOW_SIZE / 2 - 50, 100, 100 };
 
-    //! Game Over Text
-    SDL_Surface* game_over_text_surface = TTF_RenderText_Solid(game_font_, GAME_OVER_TEXT.c_str(), { 255, 0, 0, 255 });
-    g_game_over_text_texture = SDL_CreateTextureFromSurface(g_renderer, game_over_text_surface);
-    SDL_FreeSurface(game_over_text_surface);
-    g_game_over_text_rect = { WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100 };
+    //! Game Over Texture
+    SDL_Surface* game_over_surface = IMG_Load("../../res/GameOver.png");
+    g_game_over_texture = SDL_CreateTextureFromSurface(g_renderer, game_over_surface);
+    SDL_FreeSurface(game_over_surface);
+    g_game_over_rect = { WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100 };
+
+    //! Game Clear Texture
+    SDL_Surface* game_clear_surface = IMG_Load("../../res/GameClear.png");
+    g_game_clear_texture = SDL_CreateTextureFromSurface(g_renderer, game_clear_surface);
+    SDL_FreeSurface(game_clear_surface);
+    g_game_clear_rect = { WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100 };
 
     //! Player 객체 생성
     Player* player = new Player( (WINDOW_SIZE/2 + PLAYER_SIZE) , (WINDOW_SIZE / 2+PLAYER_SIZE) , Head , g_renderer);
@@ -76,11 +87,12 @@ void HandleEvents() {
         if (event.type == SDL_QUIT) {
             g_flag_running = false;
         }
-        else if (event.type == SDL_KEYDOWN && !g_game_started && !g_game_over) {
+        else if (event.type == SDL_KEYDOWN && !g_game_started && !g_game_over && !g_game_clear) {
             g_game_started = true;
         }
-        else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && g_game_over) {
+        else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && (g_game_over || g_game_clear)) {
             g_game_over = false;
+            g_game_clear = false;
             g_game_started = false;
             ClearGame();
             InitGame();
@@ -163,7 +175,7 @@ void Update() {
     // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우
     if (g_Player.size() == ARR_SIZE * ARR_SIZE) {
         cout << "Game Clear!" << endl;
-        g_game_over = true;
+        g_game_clear = true;
     }
     // 조건 2: Player가 다른 Player 객체에 닿았을 경우
     for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
@@ -180,6 +192,21 @@ void Update() {
         cout << "Game Over - Collided with wall" << endl;
         g_game_over = true;
     }
+
+    // 게임 오버 상태일 때 플레이어 위치 초기화 및 방향 초기화
+    if (g_game_over) {
+        head->setX(WINDOW_SIZE / 2 + PLAYER_SIZE);
+        head->setY(WINDOW_SIZE / 2 + PLAYER_SIZE);
+        head->setDir(-1);
+
+        // 꼬리 부분 제거
+        auto it = ++g_Player.begin();
+        while (it != g_Player.end()) {
+            Player* tail = *it;
+            it = g_Player.erase(it);
+            delete tail;
+        }
+    }
 }
 
 
@@ -187,20 +214,24 @@ void Render() {
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
     SDL_RenderClear(g_renderer);
 
-    if (!g_game_started && !g_game_over) {
-        RenderReadyText();
+    if (!g_game_started) {
+        RenderReadyTexture();
     }
-    else if (g_game_over) {
-        RenderGameOverText();
-    }
-    
-    if (g_game_started && !g_game_over) {
-        for (auto player : g_Player) {
-            player->render(g_renderer);
+    else {
+        if (g_game_over) {
+            RenderGameOverTexture();
         }
+        else if (g_game_clear) {
+            RenderGameClearTexture();
+        }
+        else {
+            for (auto player : g_Player) {
+                player->render(g_renderer);
+            }
 
-        for (auto item : g_Item) {
-            item->render(g_renderer);
+            for (auto item : g_Item) {
+                item->render(g_renderer);
+            }
         }
     }
 
@@ -221,14 +252,19 @@ void ClearGame() {
 
     Mix_FreeChunk(wave1_);
     TTF_CloseFont(game_font_);
-    SDL_DestroyTexture(g_ready_text_texture);
-    SDL_DestroyTexture(g_game_over_text_texture);
+    SDL_DestroyTexture(g_ready_texture);
+    SDL_DestroyTexture(g_game_over_texture);
+    SDL_DestroyTexture(g_game_clear_texture);
 }
 
-void RenderReadyText() {
-    SDL_RenderCopy(g_renderer, g_ready_text_texture, nullptr, &g_ready_text_rect);
+void RenderReadyTexture() {
+    SDL_RenderCopy(g_renderer, g_ready_texture, nullptr, &g_ready_rect);
 }
 
-void RenderGameOverText() {
-    SDL_RenderCopy(g_renderer, g_game_over_text_texture, nullptr, &g_game_over_text_rect);
+void RenderGameOverTexture() {
+    SDL_RenderCopy(g_renderer, g_game_over_texture, nullptr, &g_game_over_rect);
+}
+
+void RenderGameClearTexture() {
+    SDL_RenderCopy(g_renderer, g_game_clear_texture, nullptr, &g_game_clear_rect);
 }

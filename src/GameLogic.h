@@ -17,8 +17,9 @@ void Render();
 void ClearGame();
 
 //! 렌더링 관련 함수
-void RenderReadyText();
-void RenderGameOverText();
+void RenderReadyTexture();
+void RenderGameOverTexture();
+void RenderGameClearTexture();
 
 //! 게임 상태
 extern bool g_flag_running;
@@ -26,10 +27,13 @@ extern SDL_Renderer* g_renderer;
 extern Uint32 g_frame_per_sec;
 extern bool g_game_started;
 extern bool g_game_over;
-extern SDL_Texture* g_ready_text_texture;
-extern SDL_Rect g_ready_text_rect;
-extern SDL_Texture* g_game_over_text_texture;
-extern SDL_Rect g_game_over_text_rect;
+extern bool g_game_clear;
+extern SDL_Texture* g_ready_texture;
+extern SDL_Rect g_ready_rect;
+extern SDL_Texture* g_game_over_texture;
+extern SDL_Rect g_game_over_rect;
+extern SDL_Texture* g_game_clear_texture;
+extern SDL_Rect g_game_clear_rect;
 
 //! static 변수
 static int LEFT_SPACE = ARR_SIZE * ARR_SIZE; // 남은 공간은 1씩 줄어들고, 0이 되면 게임 클리어
