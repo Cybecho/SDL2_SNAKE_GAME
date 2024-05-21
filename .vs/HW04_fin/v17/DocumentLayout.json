@@ -7,14 +7,6 @@
       "RelativeMoniker": "D:0:0:{CDDCA9FF-E62B-4852-B8BE-9FC079A2CE79}|HW04_fin\\HW04_fin.vcxproj|solutionrelative:src\\GameLogic.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CDDCA9FF-E62B-4852-B8BE-9FC079A2CE79}|HW04_fin\\HW04_fin.vcxproj|C:\\SBU\\SDL2_SNAKE_GAME\\src\\obj_Base.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{CDDCA9FF-E62B-4852-B8BE-9FC079A2CE79}|HW04_fin\\HW04_fin.vcxproj|solutionrelative:src\\obj_Base.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CDDCA9FF-E62B-4852-B8BE-9FC079A2CE79}|HW04_fin\\HW04_fin.vcxproj|C:\\SBU\\SDL2_SNAKE_GAME\\src\\obj_Base.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{CDDCA9FF-E62B-4852-B8BE-9FC079A2CE79}|HW04_fin\\HW04_fin.vcxproj|solutionrelative:src\\obj_Base.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CDDCA9FF-E62B-4852-B8BE-9FC079A2CE79}|HW04_fin\\HW04_fin.vcxproj|C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CDDCA9FF-E62B-4852-B8BE-9FC079A2CE79}|HW04_fin\\HW04_fin.vcxproj|solutionrelative:src\\GameLogic.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -26,32 +18,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "obj_Base.h",
-              "DocumentMoniker": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\obj_Base.h",
-              "RelativeDocumentMoniker": "src\\obj_Base.h",
-              "ToolTip": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\obj_Base.h",
-              "RelativeToolTip": "src\\obj_Base.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-05-21T09:19:22.51Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "GameLogic.h",
               "DocumentMoniker": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.h",
               "RelativeDocumentMoniker": "src\\GameLogic.h",
               "ToolTip": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.h",
               "RelativeToolTip": "src\\GameLogic.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvw4AAAAeAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvwAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-05-20T01:57:30.75Z",
+              "WhenOpened": "2024-05-21T09:55:39.264Z",
               "EditorCaption": ""
             }
           ]
@@ -62,7 +41,7 @@
       "Orientation": 0,
       "VerticalTabListWidth": 256,
       "FloatingWindowState": {
-        "Id": "e77d0293-ec2b-460c-99c6-1f19b75b0719",
+        "Id": "1a2d21ea-7dff-4ad4-8199-f3a3b6ef1408",
         "Display": 0,
         "X": 1279,
         "Y": 24,
@@ -73,32 +52,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "obj_Base.cpp",
-              "DocumentMoniker": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\obj_Base.cpp",
-              "RelativeDocumentMoniker": "src\\obj_Base.cpp",
-              "ToolTip": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\obj_Base.cpp",
-              "RelativeToolTip": "src\\obj_Base.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-05-21T09:19:27.12Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "GameLogic.cpp",
               "DocumentMoniker": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.cpp",
               "RelativeDocumentMoniker": "src\\GameLogic.cpp",
-              "ToolTip": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.cpp",
-              "RelativeToolTip": "src\\GameLogic.cpp",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAABQAAAAVAAAA",
+              "ToolTip": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.cpp*",
+              "RelativeToolTip": "src\\GameLogic.cpp*",
+              "ViewState": "AQIAALIAAAAAAAAAAAA0wNsAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-05-20T01:57:20.91Z",
+              "WhenOpened": "2024-05-21T09:54:21.29Z",
               "EditorCaption": ""
             }
           ]

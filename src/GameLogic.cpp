@@ -97,13 +97,13 @@ void HandleEvents() {
             ClearGame();
             InitGame();
         }
-        else if (event.type == SDL_KEYDOWN && g_game_started && !g_game_over) {
+        else if (event.type == SDL_KEYDOWN && g_game_started && !g_game_over && !g_game_clear) {
             switch (event.key.keysym.sym) {
             case SDLK_LEFT: if (g_input != RIGHT) { g_input = LEFT; } break;
             case SDLK_RIGHT:if (g_input != LEFT) { g_input = RIGHT; } break;
             case SDLK_UP: if (g_input != DOWN) { g_input = UP; } break;
             case SDLK_DOWN: if (g_input != UP) { g_input = DOWN; } break;
-            case SDLK_SPACE: g_input = -1; break;
+            case SDLK_SPACE: g_game_clear = true; break;
             default: break; }
         }
     }
@@ -172,12 +172,12 @@ void Update() {
     //~ 게임 오버 조건 처리
     Player* head = g_Player.front();
 
-    // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우
+    // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우 (게임 클리어)
     if (g_Player.size() == ARR_SIZE * ARR_SIZE) {
         cout << "Game Clear!" << endl;
         g_game_clear = true;
     }
-    // 조건 2: Player가 다른 Player 객체에 닿았을 경우
+    // 조건 2: Player가 다른 Player 객체에 닿았을 경우 (게임 오버)
     for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
         Player* body = *it;
         if (head->getX() == body->getX() && head->getY() == body->getY()) {
@@ -187,14 +187,14 @@ void Update() {
         }
     }
 
-    // 조건 3: Player가 벽에 닿았을 경우
+    // 조건 3: Player가 벽에 닿았을 경우 (게임 오버)
     if (head->getX() < 0 || head->getX() >= WINDOW_SIZE || head->getY() < 0 || head->getY() >= WINDOW_SIZE) {
         cout << "Game Over - Collided with wall" << endl;
         g_game_over = true;
     }
 
-    // 게임 오버 상태일 때 플레이어 위치 초기화 및 방향 초기화
-    if (g_game_over) {
+    //~ 게임 오버 상태일 때 플레이어 위치 초기화 및 방향 초기화
+    if (g_game_over || g_game_clear) {
         head->setX(WINDOW_SIZE / 2 + PLAYER_SIZE);
         head->setY(WINDOW_SIZE / 2 + PLAYER_SIZE);
         head->setDir(-1);
