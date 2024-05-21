@@ -143,6 +143,7 @@ void Update() {
 void Render() {
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
     SDL_RenderClear(g_renderer);
+    RenderScore();
 
     if (!g_game_started) {
         RenderReadyTexture();
@@ -163,7 +164,6 @@ void Render() {
             RenderGameClearTexture();
         }
     }
-    RenderScore();
     SDL_RenderPresent(g_renderer);
 
 }
@@ -223,7 +223,7 @@ void ResetGame() {
 }
 
 void CreateNewTail(Player* player) {
-    Player* newTail = new Player(player->getX(), player->getY(), BODY, g_renderer);
+    Player* newTail = new Player(player->getPrevX(), player->getPrevY(), BODY, g_renderer);
     g_Player.push_back(newTail);
     cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
 }
@@ -315,7 +315,7 @@ void RenderScore() {
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
-    SDL_Rect textRect = { WINDOW_SIZE - textWidth - 10, 10, textWidth, textHeight };
+    SDL_Rect textRect = { 10, 10, textWidth, textHeight };  // 텍스트 위치를 좌측 상단으로 설정
     SDL_RenderCopy(g_renderer, textTexture, nullptr, &textRect);
 
     // 사용한 자원 해제

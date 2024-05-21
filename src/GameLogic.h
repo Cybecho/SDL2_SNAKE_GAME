@@ -5,18 +5,18 @@
 #include "obj_Player.h"
 #include "obj_Item.h"
 
-//! °´Ã¼ ¸®½ºÆ®
+//! ê°ì²´ ë¦¬ìŠ¤íŠ¸
 extern list<Player*> g_Player;
 extern list<Item*> g_Item;
 
-//! ÇÊ¼ö ÇÔ¼ö
+//! í•„ìˆ˜ í•¨ìˆ˜
 void InitGame();
 void HandleEvents();
 void Update();
 void Render();
 void ClearGame();
 
-//! °ÔÀÓ ·ÎÁ÷ °ü·Ã ÇÔ¼ö
+//! ê²Œì„ ë¡œì§ ê´€ë ¨ í•¨ìˆ˜
 void CreatePlayer();
 void CreateItem();
 void ResetGame();
@@ -25,17 +25,17 @@ void CreateNewItem();
 void CheckGameOver();
 
 
-//! °ÔÀÓ Á¡¼ö
-extern int g_score; // extern º¯¼ö ¼±¾ğ
+//! ê²Œì„ ì ìˆ˜
+extern int g_score; // extern ë³€ìˆ˜ ì„ ì–¸
 
-//! ·»´õ¸µ °ü·Ã ÇÔ¼ö
+//! ë Œë”ë§ ê´€ë ¨ í•¨ìˆ˜
 SDL_Texture* LoadTexture(const char* path, SDL_Renderer* renderer, SDL_Rect& rect, int x, int y, int w, int h);
 void RenderReadyTexture();
 void RenderGameOverTexture();
 void RenderGameClearTexture();
 void RenderScore();
 
-//! SDL ÅØ½ºÃ³
+//! SDL í…ìŠ¤ì²˜
 extern SDL_Texture* g_ready_texture;
 extern SDL_Rect g_ready_rect;
 extern SDL_Texture* g_game_over_texture;
@@ -43,18 +43,18 @@ extern SDL_Rect g_game_over_rect;
 extern SDL_Texture* g_game_clear_texture;
 extern SDL_Rect g_game_clear_rect;
 
-//! °ÔÀÓ »óÅÂ
+//! ê²Œì„ ìƒíƒœ
 extern bool g_flag_running;
 extern SDL_Renderer* g_renderer;
 extern Uint32 g_frame_per_sec;
 
-//! °ÔÀÓ ½ÇÇà »óÅÂ
+//! ê²Œì„ ì‹¤í–‰ ìƒíƒœ
 extern bool g_game_started;
 extern bool g_game_over;
 extern bool g_game_clear;
 extern bool g_game_paused;
 
-//! °ÔÀÓ ¾ÆÀÌÅÛ °ü·Ã
-extern Uint32 g_last_trap_item_time;  // ¸¶Áö¸·À¸·Î trap_ItemÀÌ »ı¼ºµÈ ½Ã°£
-extern Uint32 g_last_cheat_item_time; // ¸¶Áö¸·À¸·Î cheat_ItemÀÌ »ı¼ºµÈ ½Ã°£
-extern bool g_is_cheat_item_active;   // cheat_ItemÀÌ È°¼ºÈ­ »óÅÂÀÎÁö ¿©ºÎ
+//! ê²Œì„ ì•„ì´í…œ ê´€ë ¨
+extern Uint32 g_last_trap_item_time;  // ë§ˆì§€ë§‰ìœ¼ë¡œ trap_Itemì´ ìƒì„±ëœ ì‹œê°„
+extern Uint32 g_last_cheat_item_time; // ë§ˆì§€ë§‰ìœ¼ë¡œ cheat_Itemì´ ìƒì„±ëœ ì‹œê°„
+extern bool g_is_cheat_item_active;   // cheat_Itemì´ í™œì„±í™” ìƒíƒœì¸ì§€ ì—¬ë¶€
