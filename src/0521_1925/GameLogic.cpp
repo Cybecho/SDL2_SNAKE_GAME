@@ -94,21 +94,11 @@ void HandleEvents() {
         else if (event.type == SDL_KEYDOWN && !g_game_started && !g_game_over && !g_game_clear) {
             g_game_started = true;
         }
-        //~ GameReady로 전환 시 플레이어 위치 초기화 및 방향 초기화
         else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && (g_game_over || g_game_clear)) {
             g_game_over = false;
             g_game_clear = false;
             g_game_started = false;
-            g_game_paused = false;
-
-            // 꼬리 부분 제거
-            auto it = ++g_Player.begin();
-            while (it != g_Player.end()) {
-                Player* tail = *it;
-                it = g_Player.erase(it);
-                delete tail;
-            }
-
+            g_game_paused = true;
             ClearGame();
             InitGame();
         }
@@ -201,7 +191,6 @@ void Update() {
         if (head->getX() == body->getX() && head->getY() == body->getY()) {
             cout << "Game Over - Collided with body" << endl;
             g_game_over = true;
-            g_game_paused = true; // 게임 오버 시 일시 정지 상태로 설정
             break;
         }
     }
@@ -210,7 +199,21 @@ void Update() {
     if (head->getX() < 0 || head->getX() >= WINDOW_SIZE || head->getY() < 0 || head->getY() >= WINDOW_SIZE) {
         cout << "Game Over - Collided with wall" << endl;
         g_game_over = true;
-        g_game_paused = true; // 게임 오버 시 일시 정지 상태로 설정
+    }
+
+    //~ 게임 오버 상태일 때 플레이어 위치 초기화 및 방향 초기화
+    if (g_game_over || g_game_clear) {
+        head->setX(WINDOW_SIZE / 2 + PLAYER_SIZE);
+        head->setY(WINDOW_SIZE / 2 + PLAYER_SIZE);
+        head->setDir(-1);
+
+        // 꼬리 부분 제거
+        auto it = ++g_Player.begin();
+        while (it != g_Player.end()) {
+            Player* tail = *it;
+            it = g_Player.erase(it);
+            delete tail;
+        }
     }
 }
 
