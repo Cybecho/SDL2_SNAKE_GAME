@@ -1,9 +1,6 @@
 // GameLogic.cpp
 #include "GameLogic.h"
 
-//! SDL 사운드 관련 변수
-Mix_Chunk* wave1_;
-
 //! SDL 텍스트 관련 함수
 SDL_Texture* text_score_;
 SDL_Rect text_score_rect_;
@@ -29,13 +26,15 @@ SDL_Rect g_game_clear_rect;
 list<Player*> g_Player;
 list<Item*> g_Item;
 
-//! extern 변수 초기화
+//!************************** extern 변수 초기화 **************************
 bool g_game_started = false;    // 게임 시작 여부
 bool g_game_over = false;       // 게임 오버 여부
 bool g_game_clear = false;      // 게임 클리어 여부 (추가)
 bool g_game_paused = false;     // 게임 일시정지 여부
 int g_input;                    // 플레이어 입력  
 int g_score;                    // 점수
+
+//!************************** 기본 게임 상태 함수 **************************
 
 void InitGame() {
     g_flag_running = true;
@@ -52,39 +51,19 @@ void InitGame() {
     g_game_over = false;
 
     //! Game Ready Texture
-    SDL_Surface* ready_surface = IMG_Load("../../res/GameReady.png");
-    g_ready_texture = SDL_CreateTextureFromSurface(g_renderer, ready_surface);
-    SDL_SetTextureBlendMode(g_ready_texture, SDL_BLENDMODE_BLEND);
-    SDL_FreeSurface(ready_surface);
-    g_ready_rect = { WINDOW_SIZE / 2 - 50, WINDOW_SIZE / 2 - 50, 100, 100 };
+    g_ready_texture = LoadTexture("../../res/GameReady.png", g_renderer, g_ready_rect, WINDOW_SIZE / 2 - 50, WINDOW_SIZE / 2 - 50, 100, 100);
 
     //! Game Over Texture
-    SDL_Surface* game_over_surface = IMG_Load("../../res/GameOver.png");
-    g_game_over_texture = SDL_CreateTextureFromSurface(g_renderer, game_over_surface);
-    SDL_SetTextureBlendMode(g_game_over_texture, SDL_BLENDMODE_BLEND);
-    SDL_FreeSurface(game_over_surface);
-    g_game_over_rect = { WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100 };
+    g_game_over_texture = LoadTexture("../../res/GameOver.png", g_renderer, g_game_over_rect, WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100);
 
     //! Game Clear Texture
-    SDL_Surface* game_clear_surface = IMG_Load("../../res/GameClear.png");
-    g_game_clear_texture = SDL_CreateTextureFromSurface(g_renderer, game_clear_surface);
-    SDL_SetTextureBlendMode(g_game_clear_texture, SDL_BLENDMODE_BLEND);
-    SDL_FreeSurface(game_clear_surface);
-    g_game_clear_rect = { WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100 };
+    g_game_clear_texture = LoadTexture("../../res/GameClear.png", g_renderer, g_game_clear_rect, WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 50, 150, 100);
 
     //! Player 객체 생성
-    Player* player = new Player( (WINDOW_SIZE/2 + PLAYER_SIZE) , (WINDOW_SIZE / 2+PLAYER_SIZE) , Head , g_renderer);
-    g_Player.push_back(player);
+    CreatePlayer();
 
     //! Item 객체 생성
-    int itemX, itemY;
-    do {
-        itemX = rand() % WINDOW_SIZE / 10 * 10;
-        itemY = rand() % WINDOW_SIZE / 10 * 10;
-    } while (itemX == player->getX() && itemY == player->getY());
-
-    Item* item = new Item(itemX, itemY, g_renderer);
-    g_Item.push_back(item);
+    CreateItem();
 }
 
 void HandleEvents() {
@@ -98,21 +77,7 @@ void HandleEvents() {
         }
         //~ GameReady로 전환 시 플레이어 위치 초기화 및 방향 초기화
         else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && (g_game_over || g_game_clear)) {
-            g_game_over = false;
-            g_game_clear = false;
-            g_game_started = false;
-            g_game_paused = false;
-
-            // 꼬리 부분 제거
-            auto it = ++g_Player.begin();
-            while (it != g_Player.end()) {
-                Player* tail = *it;
-                it = g_Player.erase(it);
-                delete tail;
-            }
-
-            ClearGame();
-            InitGame();
+            ResetGame();
         }
         else if (event.type == SDL_KEYDOWN && g_game_started && !g_game_over && !g_game_clear) {
             switch (event.key.keysym.sym) {
@@ -154,27 +119,10 @@ void Update() {
                 delete item;
 
                 // 새로운 꼬리 Player 객체 생성
-                Player* newTail = new Player(player->getX(), player->getY(), BODY, g_renderer);
-                g_Player.push_back(newTail);
-                cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
+                CreateNewTail(player);
 
                 // 새로운 Item 객체 생성
-                int newItemX, newItemY;
-                bool isValidPosition;
-                do {
-                    newItemX = rand() % WINDOW_SIZE / 10 * 10;
-                    newItemY = rand() % WINDOW_SIZE / 10 * 10;
-                    isValidPosition = true;
-                    for (auto p : g_Player) {
-                        if (newItemX == p->getX() && newItemY == p->getY()) {
-                            isValidPosition = false;
-                            break;
-                        }
-                    }
-                } while (!isValidPosition);
-
-                Item* newItem = new Item(newItemX, newItemY, g_renderer);
-                g_Item.push_back(newItem);
+                CreateNewItem();
 
                 break;
             }
@@ -189,31 +137,7 @@ void Update() {
         currentPlayer->setY(prevPlayer->getPrevY());                    // Y 현재 Player 객체의 위치를 이전 Player 객체의 위치로 설정
     }
 
-    //~ 게임 오버 조건 처리
-    Player* head = g_Player.front();
-
-    // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우 (게임 클리어)
-    if (g_Player.size() == ARR_SIZE * ARR_SIZE) {
-        cout << "Game Clear!" << endl;
-        g_game_clear = true;
-    }
-    // 조건 2: Player가 다른 Player 객체에 닿았을 경우 (게임 오버)
-    for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
-        Player* body = *it;
-        if (head->getX() == body->getX() && head->getY() == body->getY()) {
-            cout << "Game Over - Collided with body" << endl;
-            g_game_over = true;
-            g_game_paused = true; // 게임 오버 시 일시 정지 상태로 설정
-            break;
-        }
-    }
-
-    // 조건 3: Player가 벽에 닿았을 경우 (게임 오버)
-    if (head->getX() < 0 || head->getX() >= WINDOW_SIZE || head->getY() < 0 || head->getY() >= WINDOW_SIZE) {
-        cout << "Game Over - Collided with wall" << endl;
-        g_game_over = true;
-        g_game_paused = true; // 게임 오버 시 일시 정지 상태로 설정
-    }
+    CheckGameOver();
 }
 
 void Render() {
@@ -241,7 +165,7 @@ void Render() {
     }
     RenderScore();
     SDL_RenderPresent(g_renderer);
-    
+
 }
 
 void ClearGame() {
@@ -256,11 +180,109 @@ void ClearGame() {
     }
     g_Item.clear();
 
-    Mix_FreeChunk(wave1_);
     TTF_CloseFont(game_font_);
     SDL_DestroyTexture(g_ready_texture);
     SDL_DestroyTexture(g_game_over_texture);
     SDL_DestroyTexture(g_game_clear_texture);
+}
+
+//!************************** 게임 로직 관련 함수 **************************
+
+void CreatePlayer() {
+    Player* player = new Player((WINDOW_SIZE / 2 + PLAYER_SIZE), (WINDOW_SIZE / 2 + PLAYER_SIZE), Head, g_renderer);
+    g_Player.push_back(player);
+}
+
+void CreateItem() {
+    int itemX, itemY;
+    do {
+        itemX = rand() % WINDOW_SIZE / 10 * 10;
+        itemY = rand() % WINDOW_SIZE / 10 * 10;
+    } while (itemX == g_Player.front()->getX() && itemY == g_Player.front()->getY());
+
+    Item* item = new Item(itemX, itemY, g_renderer);
+    g_Item.push_back(item);
+}
+
+void ResetGame() {
+    g_game_over = false;
+    g_game_clear = false;
+    g_game_started = false;
+    g_game_paused = false;
+
+    // 꼬리 부분 제거
+    auto it = ++g_Player.begin();
+    while (it != g_Player.end()) {
+        Player* tail = *it;
+        it = g_Player.erase(it);
+        delete tail;
+    }
+
+    ClearGame();
+    InitGame();
+}
+
+void CreateNewTail(Player* player) {
+    Player* newTail = new Player(player->getX(), player->getY(), BODY, g_renderer);
+    g_Player.push_back(newTail);
+    cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
+}
+
+void CreateNewItem() {
+    int newItemX, newItemY;
+    bool isValidPosition;
+    do {
+        newItemX = rand() % WINDOW_SIZE / 10 * 10;
+        newItemY = rand() % WINDOW_SIZE / 10 * 10;
+        isValidPosition = true;
+        for (auto p : g_Player) {
+            if (newItemX == p->getX() && newItemY == p->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+    } while (!isValidPosition);
+
+    Item* newItem = new Item(newItemX, newItemY, g_renderer);
+    g_Item.push_back(newItem);
+}
+
+void CheckGameOver() {
+    Player* head = g_Player.front();
+
+    // 조건 1: g_Player 크기가 ARR_SIZE*ARR_SIZE와 같을 경우 (게임 클리어)
+    if (g_Player.size() == ARR_SIZE * ARR_SIZE) {
+        cout << "Game Clear!" << endl;
+        g_game_clear = true;
+    }
+    // 조건 2: Player가 다른 Player 객체에 닿았을 경우 (게임 오버)
+    for (auto it = ++g_Player.begin(); it != g_Player.end(); ++it) {
+        Player* body = *it;
+        if (head->getX() == body->getX() && head->getY() == body->getY()) {
+            cout << "Game Over - Collided with body" << endl;
+            g_game_over = true;
+            g_game_paused = true; // 게임 오버 시 일시 정지 상태로 설정
+            break;
+        }
+    }
+
+    // 조건 3: Player가 벽에 닿았을 경우 (게임 오버)
+    if (head->getX() < 0 || head->getX() >= WINDOW_SIZE || head->getY() < 0 || head->getY() >= WINDOW_SIZE) {
+        cout << "Game Over - Collided with wall" << endl;
+        g_game_over = true;
+        g_game_paused = true; // 게임 오버 시 일시 정지 상태로 설정
+    }
+}
+
+//!************************** 렌더링 관련 함수 **************************
+
+SDL_Texture* LoadTexture(const char* path, SDL_Renderer* renderer, SDL_Rect& rect, int x, int y, int w, int h) {
+    SDL_Surface* surface = IMG_Load(path);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_FreeSurface(surface);
+    rect = { x, y, w, h };
+    return texture;
 }
 
 void RenderReadyTexture() {

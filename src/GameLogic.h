@@ -16,7 +16,16 @@ void Update();
 void Render();
 void ClearGame();
 
+//! 게임 로직 관련 함수
+void CreatePlayer();
+void CreateItem();
+void ResetGame();
+void CreateNewTail(Player* player);
+void CreateNewItem();
+void CheckGameOver();
+
 //! 렌더링 관련 함수
+SDL_Texture* LoadTexture(const char* path, SDL_Renderer* renderer, SDL_Rect& rect, int x, int y, int w, int h);
 void RenderReadyTexture();
 void RenderGameOverTexture();
 void RenderGameClearTexture();
