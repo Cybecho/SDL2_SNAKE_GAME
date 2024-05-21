@@ -36,4 +36,6 @@ public:
 
 	//! 현재 객체 타입 반환
     int getType() const { return mType; }
+protected:
+    static SDL_Texture* mTexture;
 };

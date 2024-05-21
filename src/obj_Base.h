@@ -1,7 +1,7 @@
 #pragma once
 #include "Include.h"
 
-enum Type { Head, BODY, ITEM}; // 객체의 타입을 나타내는 열거형
+enum Type { Head, BODY, ITEM, TRAP_ITEM , CHEAT_ITEM}; // 객체의 타입을 나타내는 열거형
 
 class Obj {
 public:

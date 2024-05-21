@@ -18,7 +18,7 @@ void Item::render(SDL_Renderer* renderer) const {
 //! ************************** negative Item **************************
 SDL_Texture* trap_Item::mTexture = nullptr;
 trap_Item::trap_Item(int x, int y, SDL_Renderer* renderer) : Obj(x, y, renderer) {
-	mType = ITEM;
+	mType = TRAP_ITEM;
 	cout << "Create trap_Item , x : " << mX << " | y : " << mY << "|| Type : " << mType << endl;
 }
 trap_Item::~trap_Item() {
@@ -33,7 +33,7 @@ void trap_Item::render(SDL_Renderer* renderer) const {
 //! ************************** cheat Item **************************
 SDL_Texture* cheat_Item::mTexture = nullptr;
 cheat_Item::cheat_Item(int x, int y, SDL_Renderer* renderer) : Obj(x, y, renderer) {
-	mType = ITEM;
+	mType = CHEAT_ITEM;
 	cout << "Create cheat_Item , x : " << mX << " | y : " << mY << "|| Type : " << mType << endl;
 }
 cheat_Item::~cheat_Item() {
