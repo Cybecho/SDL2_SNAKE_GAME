@@ -315,7 +315,7 @@ void RenderScore() {
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
-    SDL_Rect textRect = { 10, 10, textWidth, textHeight };  // 텍스트 위치를 좌측 상단으로 설정
+    SDL_Rect textRect = { WINDOW_SIZE - textWidth - 10, 10, textWidth, textHeight }; // 오른쪽 상단에 위치
     SDL_RenderCopy(g_renderer, textTexture, nullptr, &textRect);
 
     // 사용한 자원 해제
