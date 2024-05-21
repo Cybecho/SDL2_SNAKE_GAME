@@ -17,17 +17,20 @@ void Render();
 void ClearGame();
 
 //! 게임 로직 관련 함수
-void CreatePlayer();
 void ResetGame();
-void CreateNewTail(Player* player);
-void CreateNewItem();
 void CheckGameOver();
 
-void CreateItem();
-void CreateTrapItem();
-void CreateCheatItem();
-bool IsValidItemPosition(int itemX, int itemY);
-void HandleItemCollision(Player* player);
+//! 플레이어 관련 함수
+void CreatePlayer();
+void CreateNewTail(Player* player);
+
+//! 아이템 관련 함수
+void CreateItem();								// Item 컴파일 타임 중 생성 함수
+void CreateNewItem();							// Item 런타임 중 생성 함수
+void CreateTrapItem();							// trap_Item 생성 함수
+void CreateCheatItem();							// cheat_Item 생성 함수
+bool IsValidItemPosition(int itemX, int itemY);	// 아이템이 생성될 위치가 유효한지 확인
+void HandleItemCollision(Player* player);		// 아이템과 플레이어의 충돌 처리
 
 
 //! 게임 점수

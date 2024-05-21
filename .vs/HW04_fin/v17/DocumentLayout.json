@@ -114,7 +114,7 @@
               "RelativeDocumentMoniker": "src\\GameLogic.h",
               "ToolTip": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.h",
               "RelativeToolTip": "src\\GameLogic.h",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAADQAAAAAAAAA",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAACwAAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-05-21T09:55:39.264Z",
               "EditorCaption": ""
@@ -129,9 +129,9 @@
       "FloatingWindowState": {
         "Id": "1a2d21ea-7dff-4ad4-8199-f3a3b6ef1408",
         "Display": 0,
-        "X": 1279,
+        "X": 959,
         "Y": 24,
-        "Width": 1282,
+        "Width": 962,
         "Height": 2087,
         "WindowState": 0
       },
@@ -148,7 +148,7 @@
               "RelativeDocumentMoniker": "src\\GameLogic.cpp",
               "ToolTip": "C:\\SBU\\SDL2_SNAKE_GAME\\src\\GameLogic.cpp*",
               "RelativeToolTip": "src\\GameLogic.cpp*",
-              "ViewState": "AQIAACoAAAAAAAAAAAAAAIwAAABSAAAA",
+              "ViewState": "AQIAAGABAAAAAAAAAAA0wI0BAAAnAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-05-21T12:18:43.136Z",
               "EditorCaption": ""
