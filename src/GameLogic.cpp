@@ -31,7 +31,7 @@ list<cheat_Item*> g_CheatItem;
 //!************************** extern 변수 초기화 **************************
 bool g_game_started = false;    // 게임 시작 여부
 bool g_game_over = false;       // 게임 오버 여부
-bool g_game_clear = false;      // 게임 클리어 여부 (추가)
+bool g_game_clear = false;      // 게임 클리어 여부
 bool g_game_paused = false;     // 게임 일시정지 여부
 int g_input;                    // 플레이어 입력  
 int g_score;                    // 점수
