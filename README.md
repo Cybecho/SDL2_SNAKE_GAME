@@ -3,7 +3,7 @@
 
 > **미디어기술콘텐츠학과 01921408 소병욱**
 
-> ![게임 인트로](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/ed090466-04e1-46a4-9543-df94231f47bf)
+> ![게임인트로](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/b74891b7-6596-456f-8a6b-95137942ae2e)
 > [플레이 영상 You Tube](https://youtu.be/ITr2sAOLh_A?si=BdjQik9r2OfdtIfW)
 ---
 
