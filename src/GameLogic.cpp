@@ -114,8 +114,8 @@ void Update() {
     }
 
     if (!g_game_paused) {
-        //~ trap_Item 생성
-        if (SDL_GetTicks() - g_last_trap_item_time >= 5000) {
+        //~ trap_Item 생성 // 10초마다 trap_Item 생성
+        if (SDL_GetTicks() - g_last_trap_item_time >= 10000) {
             // 기존의 trap_Item 객체들 삭제
             for (auto it = g_TrapItem.begin(); it != g_TrapItem.end();) {
                 delete* it;
@@ -128,17 +128,17 @@ void Update() {
             g_last_trap_item_time = SDL_GetTicks();
         }
 
-        //~ cheat_Item 생성
-        if (!g_is_cheat_item_active && SDL_GetTicks() - g_last_cheat_item_time >= 10000) {
-            if (rand() % 100 < 10) {
+        //~ cheat_Item 생성 // 30초마다 10% 확률로 cheat_Item 생성
+        if (!g_is_cheat_item_active && SDL_GetTicks() - g_last_cheat_item_time >= 30000) {
+            if (rand() % 100 < 10) { 
                 CreateCheatItem();
                 g_is_cheat_item_active = true;
                 g_last_cheat_item_time = SDL_GetTicks();
             }
         }
 
-        //~ cheat_Item 소멸
-        if (g_is_cheat_item_active && SDL_GetTicks() - g_last_cheat_item_time >= 3000) {
+        //~ cheat_Item 소멸 // 5초 후 cheat_Item 소멸
+        if (g_is_cheat_item_active && SDL_GetTicks() - g_last_cheat_item_time >= 5000) {
             for (auto it = g_CheatItem.begin(); it != g_CheatItem.end();) {
                 delete* it;
                 it = g_CheatItem.erase(it);
@@ -151,7 +151,51 @@ void Update() {
     //! Player와 Item 충돌 감지
     for (auto player : g_Player) {
         if (player->getType() == Head) {
-            HandleItemCollision(player);
+            //~ 일반 Item 충돌 감지
+            for (auto it = g_Item.begin(); it != g_Item.end();) {
+                if (player->getX() == (*it)->getX() && player->getY() == (*it)->getY()) {
+                    delete* it;
+                    it = g_Item.erase(it);
+                    CreateNewTail(player);
+                    CreateNewItem();
+                    break;
+                }
+                else {
+                    ++it;
+                }
+            }
+
+            //~ trap_Item 충돌 감지
+            for (auto it = g_TrapItem.begin(); it != g_TrapItem.end();) {
+                if (player->getX() == (*it)->getX() && player->getY() == (*it)->getY()) {
+                    delete* it;
+                    it = g_TrapItem.erase(it);
+                    if (g_Player.size() > 1) {
+                        Player* tail = g_Player.back();
+                        g_Player.pop_back();
+                        delete tail;
+                    }
+                    break;
+                }
+                else {
+                    ++it;
+                }
+            }
+
+            //~ cheat_Item 충돌 감지
+            for (auto it = g_CheatItem.begin(); it != g_CheatItem.end();) {
+                if (player->getX() == (*it)->getX() && player->getY() == (*it)->getY()) {
+                    delete* it;
+                    it = g_CheatItem.erase(it);
+                    g_score = 9999999999;
+                    g_game_clear = true;
+                    g_game_paused = true; // 게임 일시 정지 상태로 설정
+                    break;
+                }
+                else {
+                    ++it;
+                }
+            }
         }
     }
 
@@ -222,7 +266,22 @@ void ClearGame() {
 }
 
 //!************************** 게임 로직 관련 함수 **************************
-//~ 게임 초기화 및 리셋 관련 함수
+
+void CreatePlayer() {
+    Player* player = new Player((WINDOW_SIZE / 2 + PLAYER_SIZE), (WINDOW_SIZE / 2 + PLAYER_SIZE), Head, g_renderer);
+    g_Player.push_back(player);
+}
+
+void CreateItem() {
+    int itemX, itemY;
+    do {
+        itemX = rand() % WINDOW_SIZE / 10 * 10;
+        itemY = rand() % WINDOW_SIZE / 10 * 10;
+    } while (itemX == g_Player.front()->getX() && itemY == g_Player.front()->getY());
+
+    Item* item = new Item(itemX, itemY, g_renderer);
+    g_Item.push_back(item);
+}
 
 void ResetGame() {
     g_game_over = false;
@@ -240,6 +299,31 @@ void ResetGame() {
 
     ClearGame();
     InitGame();
+}
+
+void CreateNewTail(Player* player) {
+    Player* newTail = new Player(player->getPrevX(), player->getPrevY(), BODY, g_renderer);
+    g_Player.push_back(newTail);
+    cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
+}
+
+void CreateNewItem() {
+    int newItemX, newItemY;
+    bool isValidPosition;
+    do {
+        newItemX = rand() % WINDOW_SIZE / 10 * 10;
+        newItemY = rand() % WINDOW_SIZE / 10 * 10;
+        isValidPosition = true;
+        for (auto p : g_Player) {
+            if (newItemX == p->getX() && newItemY == p->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+    } while (!isValidPosition);
+
+    Item* newItem = new Item(newItemX, newItemY, g_renderer);
+    g_Item.push_back(newItem);
 }
 
 void CheckGameOver() {
@@ -269,57 +353,42 @@ void CheckGameOver() {
     }
 }
 
-//~ Player 관련 함수
-
-void CreatePlayer() {
-    Player* player = new Player((WINDOW_SIZE / 2 + PLAYER_SIZE), (WINDOW_SIZE / 2 + PLAYER_SIZE), Head, g_renderer);
-    g_Player.push_back(player);
-}
-
-void CreateNewTail(Player* player) {
-    Player* newTail = new Player(player->getPrevX(), player->getPrevY(), BODY, g_renderer);
-    g_Player.push_back(newTail);
-    cout << "Size : " << g_Player.size() << " / " << ARR_SIZE * ARR_SIZE << " | Score :  " << g_score << endl;
-}
-
-//~ Item 관련 함수
-
-void CreateItem() {
+void CreateTrapItem() {
     int itemX, itemY;
+    bool isValidPosition;
     do {
         itemX = rand() % WINDOW_SIZE / 10 * 10;
         itemY = rand() % WINDOW_SIZE / 10 * 10;
-    } while (!IsValidItemPosition(itemX, itemY));
-
-    Item* item = new Item(itemX, itemY, g_renderer);
-    g_Item.push_back(item);
-}
-
-void CreateNewItem() {
-    int newItemX, newItemY;
-    bool isValidPosition;
-    do {
-        newItemX = rand() % WINDOW_SIZE / 10 * 10;
-        newItemY = rand() % WINDOW_SIZE / 10 * 10;
         isValidPosition = true;
-        for (auto p : g_Player) {
-            if (newItemX == p->getX() && newItemY == p->getY()) {
+
+        // Player와 겹치는지 확인
+        for (auto player : g_Player) {
+            if (itemX == player->getX() && itemY == player->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+
+        // 다른 Item과 겹치는지 확인
+        for (auto item : g_Item) {
+            if (itemX == item->getX() && itemY == item->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+        for (auto item : g_TrapItem) {
+            if (itemX == item->getX() && itemY == item->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+        for (auto item : g_CheatItem) {
+            if (itemX == item->getX() && itemY == item->getY()) {
                 isValidPosition = false;
                 break;
             }
         }
     } while (!isValidPosition);
-
-    Item* newItem = new Item(newItemX, newItemY, g_renderer);
-    g_Item.push_back(newItem);
-}
-
-void CreateTrapItem() {
-    int itemX, itemY;
-    do {
-        itemX = rand() % WINDOW_SIZE / 10 * 10;
-        itemY = rand() % WINDOW_SIZE / 10 * 10;
-    } while (!IsValidItemPosition(itemX, itemY));
 
     trap_Item* item = new trap_Item(itemX, itemY, g_renderer);
     g_TrapItem.push_back(item);
@@ -327,91 +396,43 @@ void CreateTrapItem() {
 
 void CreateCheatItem() {
     int itemX, itemY;
+    bool isValidPosition;
     do {
         itemX = rand() % WINDOW_SIZE / 10 * 10;
         itemY = rand() % WINDOW_SIZE / 10 * 10;
-    } while (!IsValidItemPosition(itemX, itemY));
+        isValidPosition = true;
+
+        // Player와 겹치는지 확인
+        for (auto player : g_Player) {
+            if (itemX == player->getX() && itemY == player->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+
+        // 다른 Item과 겹치는지 확인
+        for (auto item : g_Item) {
+            if (itemX == item->getX() && itemY == item->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+        for (auto item : g_TrapItem) {
+            if (itemX == item->getX() && itemY == item->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+        for (auto item : g_CheatItem) {
+            if (itemX == item->getX() && itemY == item->getY()) {
+                isValidPosition = false;
+                break;
+            }
+        }
+    } while (!isValidPosition);
 
     cheat_Item* item = new cheat_Item(itemX, itemY, g_renderer);
     g_CheatItem.push_back(item);
-}
-
-//~ Player와 Item 충돌 관련 함수
-
-bool IsValidItemPosition(int itemX, int itemY) {
-    // Player와 겹치는지 확인
-    for (auto player : g_Player) {
-        if (itemX == player->getX() && itemY == player->getY()) {
-            return false;
-        }
-    }
-
-    // 다른 Item과 겹치는지 확인
-    for (auto item : g_Item) {
-        if (itemX == item->getX() && itemY == item->getY()) {
-            return false;
-        }
-    }
-    for (auto item : g_TrapItem) {
-        if (itemX == item->getX() && itemY == item->getY()) {
-            return false;
-        }
-    }
-    for (auto item : g_CheatItem) {
-        if (itemX == item->getX() && itemY == item->getY()) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-void HandleItemCollision(Player* player) {
-    //~ 일반 Item 충돌 감지
-    for (auto it = g_Item.begin(); it != g_Item.end();) {
-        if (player->getX() == (*it)->getX() && player->getY() == (*it)->getY()) {
-            delete* it;
-            it = g_Item.erase(it);
-            CreateNewTail(player);
-            CreateNewItem();
-            break;
-        }
-        else {
-            ++it;
-        }
-    }
-
-    //~ trap_Item 충돌 감지
-    for (auto it = g_TrapItem.begin(); it != g_TrapItem.end();) {
-        if (player->getX() == (*it)->getX() && player->getY() == (*it)->getY()) {
-            delete* it;
-            it = g_TrapItem.erase(it);
-            if (g_Player.size() > 1) {
-                Player* tail = g_Player.back();
-                g_Player.pop_back();
-                delete tail;
-            }
-            break;
-        }
-        else {
-            ++it;
-        }
-    }
-
-    //~ cheat_Item 충돌 감지
-    for (auto it = g_CheatItem.begin(); it != g_CheatItem.end();) {
-        if (player->getX() == (*it)->getX() && player->getY() == (*it)->getY()) {
-            delete* it;
-            it = g_CheatItem.erase(it);
-            g_score = 9999999999;
-            g_game_clear = true;
-            g_game_paused = true; // 게임 일시 정지 상태로 설정
-            break;
-        }
-        else {
-            ++it;
-        }
-    }
 }
 
 //!************************** 렌더링 관련 함수 **************************

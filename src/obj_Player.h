@@ -9,7 +9,7 @@ public:
     void update();
     void render(SDL_Renderer* renderer) const;
 
-    //! ÇöÀç °´Ã¼ Å¸ÀÔ ¹İÈ¯
+    //! í˜„ì¬ ê°ì²´ íƒ€ì… ë°˜í™˜
     int getType() const { return mType; }
 
 protected:

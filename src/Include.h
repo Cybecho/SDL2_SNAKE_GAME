@@ -47,8 +47,6 @@ extern int g_input; // 사용자의 키를 입력받는 변수
 using namespace std;
 
 //! const 변수
-const string READY_TEXT = "Ready";
-const string GAME_OVER_TEXT = "Game Over";
 const int GAME_FRAME = 25;							// 초당 프레임
 const int WINDOW_SIZE = 1000;						// 윈도우 사이즈
 const int PLAYER_SIZE = 10;							// 캐릭터 사이즈
