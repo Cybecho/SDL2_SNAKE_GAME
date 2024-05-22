@@ -1,7 +1,7 @@
 # 게임프로그래밍 기말대체과제 스네이크 게임 보고서
 
 > **미디어기술콘텐츠학과 01921408 소병욱**
-> 
+> [플레이 영상 You Tube](https://youtu.be/ITr2sAOLh_A?si=BdjQik9r2OfdtIfW)
 
 ---
 
@@ -40,7 +40,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 # 1. 게임 기본 설계
 
 ## 1.1 - 전체 격자 크기
----
+
 
 - 100 x 100
 - `Include.h` - `const int ARR_SIZE = WINDOW_SIZE / PLAYER_SIZE;`
@@ -49,7 +49,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
     
 
 ## 1.2 - 뱀이 이동하는 속도
----
+
 
 - 25FPS
 - `Include.h` - `const int GAME_FRAME = 25;`
