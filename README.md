@@ -40,6 +40,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 # 1. 게임 기본 설계
 
 ## 1.1 - 전체 격자 크기
+---
 
 - 100 x 100
 - `Include.h` - `const int ARR_SIZE = WINDOW_SIZE / PLAYER_SIZE;`
@@ -48,6 +49,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
     
 
 ## 1.2 - 뱀이 이동하는 속도
+---
 
 - 25FPS
 - `Include.h` - `const int GAME_FRAME = 25;`
@@ -219,7 +221,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 
 - 클래스 및 열거형 구조
     
-    ![Untitled](./res/classDiagram.png)
+    ![Untitled](https://raw.githubusercontent.com/Cybecho/SDL2_SNAKE_GAME/main/res/classDiagram.png)
     
     게임의 클래스 구조 및 열거형 타입은 다음과 같이 구성했다.
     기본적으로 플레이어와 아이템은 같은 Obj라는 순수 가상 클래스 부모를 상속받는다.
@@ -261,13 +263,13 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 
 ## 2.3 - 세부 아이템 구현
 
-- Item, trap_Item, cheat_Item 공통 생성조건
+> - Item, trap_Item, cheat_Item 공통 생성조건
     - 생성조건 : 객체들은 Player Head 와 Body 가 위치한곳에 절대로 생성될 수 없다.
     - 생성조건 : 객체들은 다른 연결리스트에 존재하는 객체더라도, 겹쳐서 생성될 수 없다
 
 ### 2.3.a - 일반 아이템
 
-- 일반 아이템 : 1 칸 늘어남 `Obj_Item.h` - `class Item : public Obj`
+> 일반 아이템 : 1 칸 늘어남 `Obj_Item.h` - `class Item : public Obj`
 - `GameLogic.cpp` - `void CreateItem()`
     
     ```cpp
@@ -339,9 +341,9 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
     게임 업데이트 함수에서 플레이어와 아이템의 충돌을 감지하는 부분입니다. 플레이어의 머리(Head)가 아이템의 위치와 겹칠 경우, 해당 아이템을 삭제하고 플레이어의 꼬리를 생성하는 `CreateNewTail` 함수를 호출합니다. 그리고 `CreateNewItem` 함수를 호출하여 새로운 아이템을 생성합니다.
     
 
-### 2.3.a - 일반 아이템
+### 2.3.b - 함정 아이템
 
-- 함정 아이템 : 1 칸 줄어듦 `Obj_Item.h` - `class trapItem : public Obj`
+> 함정 아이템 : 1 칸 줄어듦 `Obj_Item.h` - `class trapItem : public Obj`
 - `GameLogic.cpp` - `void CreateTrapItem()`
     
     ```cpp
@@ -439,7 +441,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 
 ### 2.3.c - 치트 아이템
 
-- 치트 아이템 : 게임 클리어 `Obj_Item.h` - `class cheatItem : public Obj`
+> 치트 아이템 : 게임 클리어 `Obj_Item.h` - `class cheatItem : public Obj`
 - `GameLogic.cpp` - `void CreateCheatItem()`
     
     ```cpp
