@@ -10,7 +10,7 @@ Item::~Item() {
     cout << "Delete Item" << endl;
 }
 void Item::render(SDL_Renderer* renderer) const {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // ¾ÆÀÌÅÛ ÀÌ¶ó¸é ÆÄ¶õ»öÀ¸·Î
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // ì•„ì´í…œ ì´ë¼ë©´ íŒŒëž€ìƒ‰ìœ¼ë¡œ
 
     SDL_RenderFillRect(renderer, &mRect);
 }
@@ -25,7 +25,7 @@ trap_Item::~trap_Item() {
 	cout << "Delete trap_Item" << endl;
 }
 void trap_Item::render(SDL_Renderer* renderer) const {
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // ÇÔÁ¤ ¾ÆÀÌÅÛ ÀÌ¶ó¸é ÃÊ·Ï»öÀ¸·Î
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // í•¨ì • ì•„ì´í…œ ì´ë¼ë©´ ì´ˆë¡ìƒ‰ìœ¼ë¡œ
 
 	SDL_RenderFillRect(renderer, &mRect);
 }
@@ -40,7 +40,7 @@ cheat_Item::~cheat_Item() {
 	cout << "Delete cheat_Item" << endl;
 }
 void cheat_Item::render(SDL_Renderer* renderer) const {
-	SDL_SetRenderDrawColor(renderer, 255, 127, 0, 255); // Ä¡Æ® ¾ÆÀÌÅÛ ÀÌ¶ó¸é ÁÖÈ²»öÀ¸·Î
+	SDL_SetRenderDrawColor(renderer, 255, 127, 0, 255); // ì¹˜íŠ¸ ì•„ì´í…œ ì´ë¼ë©´ ì£¼í™©ìƒ‰ìœ¼ë¡œ
 
 	SDL_RenderFillRect(renderer, &mRect);
 }
