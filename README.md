@@ -221,7 +221,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 
 - 클래스 및 열거형 구조
     
-    ![Untitled](https://raw.githubusercontent.com/Cybecho/SDL2_SNAKE_GAME/main/res/classDiagram.png)
+    ![Untitled](https://github.com/Cybecho/SDL2_SNAKE_GAME/blob/main/screenshot/classDiagram.png?raw=true)
     
     게임의 클래스 구조 및 열거형 타입은 다음과 같이 구성했다.
     기본적으로 플레이어와 아이템은 같은 Obj라는 순수 가상 클래스 부모를 상속받는다.
@@ -270,6 +270,9 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 ### 2.3.a - 일반 아이템
 
 > 일반 아이템 : 1 칸 늘어남 `Obj_Item.h` - `class Item : public Obj`
+>
+>![a아이템 획득시 꼬리 증가](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/f881980b-9d84-48d6-a780-57230f981bce)
+
 - `GameLogic.cpp` - `void CreateItem()`
     
     ```cpp
@@ -344,6 +347,9 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 ### 2.3.b - 함정 아이템
 
 > 함정 아이템 : 1 칸 줄어듦 `Obj_Item.h` - `class trapItem : public Obj`
+> 
+> ![b함정아이템 획득시 꼬리 감소](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/7cb35028-0a02-4588-8a2f-4fb4b8c1c836)
+
 - `GameLogic.cpp` - `void CreateTrapItem()`
     
     ```cpp
@@ -442,6 +448,9 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
 ### 2.3.c - 치트 아이템
 
 > 치트 아이템 : 게임 클리어 `Obj_Item.h` - `class cheatItem : public Obj`
+> 
+>![c치트아이템 획득시 게임 클리어](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/e56ed421-2181-4e87-a5c0-386e6a5a0d3e)
+
 - `GameLogic.cpp` - `void CreateCheatItem()`
     
     ```cpp
@@ -564,7 +573,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
     각 변수의 값에 따라 게임 화면 렌더링, 업데이트 등의 동작이 결정됩니다.
     
 1. `Include.h` - `g_game_started` // 게임 시작 여부를 나타내는 변수
-    
+    > ![게임레디 후 스타트](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/83ea9273-7258-4aaa-b3a1-e3694f831f02)
     ```cpp
     void HandleEvents() {
     // ...
@@ -578,6 +587,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
     `HandleEvents()` 함수에서 게임이 시작되지 않은 상태에서 키 입력이 발생하면 `true`로 설정됩니다.
     
 2. `Include.h` - `g_game_over` // 게임 오버 여부를 나타내는 변수
+   > ![게임 오버](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/2184fbfe-7573-43be-8ca6-116940e352f0)
     
     ```cpp
     // ... update()
@@ -606,7 +616,7 @@ Game Clear - 마우스 좌클릭으로 다시 시작 가능
     `CheckGameOver()` 함수에서 게임 오버 조건을 만족하면 `true`로 설정됩니다.
     
 3. `Include.h` - `g_game_clear` // 게임 클리어 여부를 나타내는 변수
-    
+    > ![c치트아이템 획득시 게임 클리어](https://github.com/Cybecho/SDL2_SNAKE_GAME/assets/42949995/e56ed421-2181-4e87-a5c0-386e6a5a0d3e)
     ```cpp
     // ... update()
     
